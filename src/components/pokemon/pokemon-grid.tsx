@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react';
 import { useGetInfinitePokemons } from '@/services/pokemon';
 import { useGetTypeDetail } from '@/services/type';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useDebounceValue } from 'usehooks-ts';
 import { PokemonCardSkeleton } from './pokemon-card-skeleton';
 import { PokemonListItem } from './pokemon-list-item';
 
@@ -14,46 +13,27 @@ const GRID_CLASSES =
 const PER_PAGE = 20;
 
 interface PokemonGridProps {
-  search: string;
   type: string;
 }
 
-export function PokemonGrid({ search, type }: PokemonGridProps) {
-  if (type) return <TypeFilteredGrid key={type} type={type} search={search} />;
-  return <InfiniteGrid search={search} />;
+export function PokemonGrid({ type }: PokemonGridProps) {
+  if (type) return <TypeFilteredGrid key={type} type={type} />;
+  return <InfiniteGrid />;
 }
 
-function InfiniteGrid({ search }: { search: string }) {
+function InfiniteGrid() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useGetInfinitePokemons();
 
-  const [debouncedSearch] = useDebounceValue(search, 500);
-
-  const allItems = useMemo(() => data?.pages.flatMap((p) => p.results) ?? [], [data?.pages]);
-
-  const items = useMemo(
-    () =>
-      debouncedSearch
-        ? allItems.filter((p) => p.name.includes(debouncedSearch.toLowerCase()))
-        : allItems,
-    [allItems, debouncedSearch]
-  );
+  const items = useMemo(() => data?.pages.flatMap((p) => p.results) ?? [], [data?.pages]);
 
   if (isLoading) return <GridSkeleton />;
-
-  if (items.length === 0) {
-    return (
-      <p className="py-20 text-center text-sm text-zinc-400">
-        No Pokémon found for &quot;{search}&quot;
-      </p>
-    );
-  }
 
   return (
     <InfiniteScroll
       dataLength={items.length}
       next={fetchNextPage}
-      hasMore={!search && !!hasNextPage}
+      hasMore={!!hasNextPage}
       loader={
         isFetchingNextPage && (
           <div className={`mt-3 ${GRID_CLASSES}`}>
@@ -74,36 +54,19 @@ function InfiniteGrid({ search }: { search: string }) {
   );
 }
 
-function TypeFilteredGrid({ type, search }: { type: string; search: string }) {
+function TypeFilteredGrid({ type }: { type: string }) {
   const { data, isLoading } = useGetTypeDetail({ idOrName: type });
   const [page, setPage] = useState(1);
-  const [prevSearch, setPrevSearch] = useState(search);
-
-  // Reset page when search changes — setState during render is the React-recommended
-  // pattern to avoid an unnecessary effect cycle when deriving state from props.
-  if (prevSearch !== search) {
-    setPrevSearch(search);
-    setPage(1);
-  }
 
   const allItems = useMemo(() => data?.pokemon ?? [], [data?.pokemon]);
-
-  const filtered = useMemo(
-    () =>
-      search ? allItems.filter((p) => p.pokemon.name.includes(search.toLowerCase())) : allItems,
-    [allItems, search]
-  );
-
-  const visible = useMemo(() => filtered.slice(0, page * PER_PAGE), [filtered, page]);
-  const hasMore = visible.length < filtered.length;
+  const visible = useMemo(() => allItems.slice(0, page * PER_PAGE), [allItems, page]);
+  const hasMore = visible.length < allItems.length;
 
   if (isLoading) return <GridSkeleton />;
 
-  if (filtered.length === 0) {
+  if (allItems.length === 0) {
     return (
-      <p className="py-20 text-center text-sm text-zinc-400">
-        No Pokémon found{search ? ` for "${search}"` : ''}.
-      </p>
+      <p className="py-20 text-center text-sm text-zinc-400">No Pokémon found for this type.</p>
     );
   }
 
