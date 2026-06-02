@@ -1,5 +1,4 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SearchInput } from '../search-input';
 
@@ -32,21 +31,21 @@ describe('SearchInput', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('calls setSearch with null when clear is clicked', async () => {
+  it('calls setSearch with null when clear is clicked', () => {
     mockUseQueryState.mockReturnValue(['pikachu', mockSetSearch] as never);
 
     render(<SearchInput />);
-    await userEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button'));
 
     expect(mockSetSearch).toHaveBeenCalledWith(null);
   });
 
-  it('calls setSearch when typing', async () => {
+  it('calls setSearch when typing', () => {
     render(<SearchInput />);
     const input = screen.getByPlaceholderText('Search Pokémon...');
 
-    await userEvent.type(input, 'b');
+    fireEvent.change(input, { target: { value: 'bulbasaur' } });
 
-    expect(mockSetSearch).toHaveBeenCalled();
+    expect(mockSetSearch).toHaveBeenCalledWith('bulbasaur');
   });
 });
