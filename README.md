@@ -6,8 +6,9 @@ A modern Pokémon encyclopedia built with Next.js App Router, consuming [PokeAPI
 
 - **Infinite scroll** — browse all 1,350+ Pokémon with offset-based pagination
 - **Type filter** — filter Pokémon by any of the 18 game types via URL state
-- **Search** — find Pokémon by name with instant client-side filtering
-- **Detail page** — artwork, base stats, abilities with effect text, and evolution chain
+- **Search** — find Pokémon by name with debounced client-side filtering
+- **Detail page** — artwork, base stats, abilities with effect text, evolution chain, and game sprites
+- **Dark mode** — system-aware theme with manual toggle
 - **Shareable URLs** — search and filter state live in the URL (`?type=fire&search=char`)
 - **Loading & error states** — skeleton UI and error boundaries at route level
 
@@ -21,8 +22,9 @@ A modern Pokémon encyclopedia built with Next.js App Router, consuming [PokeAPI
 | Data fetching   | TanStack Query v5               |
 | HTTP client     | Axios                           |
 | URL state       | nuqs                            |
-| Global UI state | Zustand                         |
+| Theme           | next-themes                     |
 | Infinite scroll | react-infinite-scroll-component |
+| Utilities       | usehooks-ts                     |
 | Testing         | Vitest + React Testing Library  |
 | Runtime         | Bun                             |
 
@@ -96,23 +98,22 @@ src/
 │   │   ├── pokemon-type-filter.tsx
 │   │   ├── stat-bar.tsx
 │   │   └── type-badge.tsx
-│   └── shared/                 # Layout components
+│   └── shared/                 # Layout and global components
 │       ├── header.tsx
 │       ├── query-provider.tsx
-│       └── search-input.tsx
+│       ├── search-input.tsx
+│       ├── theme-provider.tsx
+│       └── theme-toggle.tsx
 │
-├── services/                   # API service layer
-│   ├── core/                   # Http class, ApiError, shared types
+├── services/                   # API service layer (only active endpoints)
+│   ├── core/                   # Http class, ApiError, request types
 │   ├── api.ts                  # pokemonApi singleton
 │   ├── types.ts                # Shared PokeAPI types
-│   ├── pokemon/                # Full: fetcher + hooks + types
-│   ├── pokemon-species/        # Full: fetcher + hooks + types
-│   ├── type/                   # Full: fetcher + hooks + types
-│   ├── ability/                # Full: fetcher + hooks + types
-│   ├── evolution-chain/        # Full: fetcher + hooks + types
-│   ├── move/                   # Full: fetcher + hooks + types
-│   ├── generation/             # Full: fetcher + hooks + types
-│   └── [40 more domains]/      # Minimal: fetcher + types
+│   ├── pokemon/                # fetcher + hooks + types
+│   ├── pokemon-species/        # fetcher + hooks + types
+│   ├── type/                   # fetcher + hooks + types
+│   ├── ability/                # fetcher + hooks + types
+│   └── evolution-chain/        # fetcher + hooks + types
 │
 ├── constants/
 │   ├── api.ts                  # BASE_URL, POKEMON_LIST_LIMIT
@@ -121,9 +122,6 @@ src/
 ├── utils/
 │   └── pokemon.ts              # formatPokemonId, formatHeight, etc.
 │
-├── hooks/                      # Shared custom hooks
-├── stores/                     # Zustand stores
-├── types/                      # Shared TypeScript types
 └── test/
     ├── setup.ts                # jest-dom global matchers
     └── render-utils.tsx        # renderWithProviders helper
@@ -133,12 +131,14 @@ src/
 
 ### Service Layer
 
-Each PokeAPI endpoint maps to a service folder under `src/services/`, mirroring the API path exactly:
+Only the endpoints actively used by the UI have a service folder. Each folder mirrors its API path exactly:
 
 ```
 GET /pokemon           → services/pokemon/
 GET /pokemon-species   → services/pokemon-species/
 GET /type              → services/type/
+GET /ability           → services/ability/
+GET /evolution-chain   → services/evolution-chain/
 ```
 
 Each service folder contains:
@@ -154,7 +154,6 @@ services/pokemon/
 The `Http` class in `services/core/http.ts` wraps Axios with centralized error handling. All errors are normalized to `ApiError`. There is no auth logic — PokeAPI is a public API.
 
 ```ts
-// Usage
 import { pokemonFetcher } from '@/services/pokemon';
 
 const list = await pokemonFetcher.getPokemons({ limit: 20, offset: 0 });
@@ -167,9 +166,8 @@ const detail = await pokemonFetcher.getPokemonDetail({ idOrName: 'pikachu' });
 | ---------------------------- | -------------- | ------------------------ |
 | Server data (Pokémon, types) | TanStack Query | `useGetPokemonDetail`    |
 | URL state (search, filter)   | nuqs           | `?type=fire&search=char` |
-| UI state (modals, drawers)   | Zustand        | —                        |
 
-Server state is never duplicated in Zustand. URL state is used for all shareable filter/search values so users can bookmark or share filtered views.
+URL state is used for all shareable filter/search values so users can bookmark or share filtered views. There is no global client-side state store — all server state lives in TanStack Query's cache.
 
 ### Data Flow — Home Page
 
@@ -192,8 +190,8 @@ PokemonGrid
   ↓
 PokemonDetail
   ├── useGetPokemonDetail(id)
-  ├── useGetPokemonSpecies(species.name)     ← depends on detail
-  ├── useGetEvolutionChain(chain.id)         ← depends on species
+  ├── useGetPokemonSpecies(species.name)   ← depends on detail
+  ├── useGetEvolutionChain(chain.id)       ← depends on species
   └── AbilityItem × N
         └── useGetAbility(ability.name)
 ```
@@ -205,15 +203,15 @@ bun test            # run all tests
 bun test:coverage   # with coverage report
 ```
 
-Tests are colocated with source files (`*.test.ts` / `*.test.tsx`).
+Tests live in `__tests__/` folders colocated with the source they cover.
 
-| Layer      | Strategy                                                 |
-| ---------- | -------------------------------------------------------- |
-| Fetchers   | Mock `pokemonApi.get` via `vi.mock`, assert URL + params |
-| Utilities  | Pure function tests, no mocking needed                   |
-| Components | React Testing Library, mock `next/image` and `next/link` |
+| Layer      | Strategy                                                             |
+| ---------- | -------------------------------------------------------------------- |
+| Fetchers   | Mock `pokemonApi.get` via `vi.mock`, assert URL, params, error cases |
+| Utilities  | Pure function tests, no mocking needed                               |
+| Components | React Testing Library, mock `next/image`, `next/link`, and hooks     |
 
-For component tests that need TanStack Query, use `renderWithProviders` from `src/test/render-utils.tsx`.
+For components that use TanStack Query, use `renderWithProviders` from `src/test/render-utils.tsx`.
 
 ## Commit Convention
 
@@ -226,4 +224,5 @@ chore(scope): short description
 test(scope): short description
 docs(scope): short description
 refactor(scope): short description
+perf(scope): short description
 ```
