@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,7 +10,7 @@ interface PokemonCardProps {
   types: string[];
 }
 
-export const PokemonCard = memo(function PokemonCard({ id, name, types }: PokemonCardProps) {
+export function PokemonCard({ id, name, types }: PokemonCardProps) {
   const artwork = getPokemonArtwork(id);
 
   return (
@@ -44,4 +43,4 @@ export const PokemonCard = memo(function PokemonCard({ id, name, types }: Pokemo
       </Card>
     </Link>
   );
-});
+}

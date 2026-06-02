@@ -1,6 +1,5 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
 import { POKEMON_TYPE_COLORS } from '@/constants/pokemon-types';
 import { useGetTypes } from '@/services/type';
 import { extractIdFromUrl } from '@/utils/pokemon';
@@ -13,15 +12,7 @@ export function PokemonTypeFilter() {
   });
   const { data } = useGetTypes();
 
-  const types = useMemo(
-    () => data?.results.filter((t) => extractIdFromUrl(t.url) <= 10000) ?? [],
-    [data?.results]
-  );
-
-  const handleSelect = useCallback(
-    (name: string) => setSelectedType((prev) => (prev === name ? null : name)),
-    [setSelectedType]
-  );
+  const types = data?.results.filter((t) => extractIdFromUrl(t.url) <= 10000) ?? [];
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -32,7 +23,7 @@ export function PokemonTypeFilter() {
         return (
           <button
             key={t.name}
-            onClick={() => handleSelect(t.name)}
+            onClick={() => setSelectedType(isSelected ? null : t.name)}
             className="rounded-full px-3 py-1 text-xs font-semibold capitalize text-white transition-opacity"
             style={{ backgroundColor: color, opacity: selectedType && !isSelected ? 0.35 : 1 }}
           >
