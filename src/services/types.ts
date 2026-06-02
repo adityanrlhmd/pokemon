@@ -32,3 +32,8 @@ export interface FlavorText {
   flavor_text: string;
   language: NamedAPIResource;
 }
+
+export interface Description {
+  description: string;
+  language: NamedAPIResource;
+}
