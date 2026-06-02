@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGetInfinitePokemons } from '@/services/pokemon';
 import { useGetTypeDetail } from '@/services/type';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,13 +11,15 @@ import { PokemonListItem } from './pokemon-list-item';
 const GRID_CLASSES =
   'grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
 
+const PER_PAGE = 20;
+
 interface PokemonGridProps {
   search: string;
   type: string;
 }
 
 export function PokemonGrid({ search, type }: PokemonGridProps) {
-  if (type) return <TypeFilteredGrid type={type} search={search} />;
+  if (type) return <TypeFilteredGrid key={type} type={type} search={search} />;
   return <InfiniteGrid search={search} />;
 }
 
@@ -74,18 +76,30 @@ function InfiniteGrid({ search }: { search: string }) {
 
 function TypeFilteredGrid({ type, search }: { type: string; search: string }) {
   const { data, isLoading } = useGetTypeDetail({ idOrName: type });
+  const [page, setPage] = useState(1);
+  const [prevSearch, setPrevSearch] = useState(search);
+
+  // Reset page when search changes — setState during render is the React-recommended
+  // pattern to avoid an unnecessary effect cycle when deriving state from props.
+  if (prevSearch !== search) {
+    setPrevSearch(search);
+    setPage(1);
+  }
 
   const allItems = useMemo(() => data?.pokemon ?? [], [data?.pokemon]);
 
-  const items = useMemo(
+  const filtered = useMemo(
     () =>
       search ? allItems.filter((p) => p.pokemon.name.includes(search.toLowerCase())) : allItems,
     [allItems, search]
   );
 
+  const visible = useMemo(() => filtered.slice(0, page * PER_PAGE), [filtered, page]);
+  const hasMore = visible.length < filtered.length;
+
   if (isLoading) return <GridSkeleton />;
 
-  if (items.length === 0) {
+  if (filtered.length === 0) {
     return (
       <p className="py-20 text-center text-sm text-zinc-400">
         No Pokémon found{search ? ` for "${search}"` : ''}.
@@ -94,11 +108,25 @@ function TypeFilteredGrid({ type, search }: { type: string; search: string }) {
   }
 
   return (
-    <div className={GRID_CLASSES}>
-      {items.map(({ pokemon }) => (
-        <PokemonListItem key={pokemon.name} name={pokemon.name} url={pokemon.url} />
-      ))}
-    </div>
+    <InfiniteScroll
+      dataLength={visible.length}
+      next={() => setPage((p) => p + 1)}
+      hasMore={hasMore}
+      loader={
+        <div className={`mt-3 ${GRID_CLASSES}`}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <PokemonCardSkeleton key={i} />
+          ))}
+        </div>
+      }
+      style={{ overflow: 'unset' }}
+    >
+      <div className={GRID_CLASSES}>
+        {visible.map(({ pokemon }) => (
+          <PokemonListItem key={pokemon.name} name={pokemon.name} url={pokemon.url} />
+        ))}
+      </div>
+    </InfiniteScroll>
   );
 }
 
