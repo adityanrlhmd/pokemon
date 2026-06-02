@@ -4,12 +4,12 @@ A modern Pokémon encyclopedia built with Next.js App Router, consuming [PokeAPI
 
 ## Features
 
-- **Infinite scroll** — browse all 1,350+ Pokémon with offset-based pagination
+- **Infinite scroll** — browse Pokémon #0001–#1025 with offset-based pagination
 - **Type filter** — filter Pokémon by any of the 18 game types via URL state
-- **Search** — find Pokémon by name with debounced client-side filtering
-- **Detail page** — artwork, base stats, abilities with effect text, evolution chain, and game sprites
+- **Detail page** — artwork, base stats, abilities, evolution chain, game sprites
+- **Prev / Next navigation** — cycle through Pokémon on the detail page with wrap-around
 - **Dark mode** — system-aware theme with manual toggle
-- **Shareable URLs** — search and filter state live in the URL (`?type=fire&search=char`)
+- **Shareable URLs** — type filter state lives in the URL (`?type=fire`)
 - **Loading & error states** — skeleton UI and error boundaries at route level
 
 ## Tech Stack
@@ -77,54 +77,64 @@ bun validate      # type-check + lint + format check
 
 ```
 src/
-├── app/                        # Next.js App Router
-│   ├── page.tsx                # Home — infinite list, search, filter
-│   ├── loading.tsx             # Home route loading state
-│   ├── error.tsx               # Home route error boundary
-│   ├── not-found.tsx           # 404 page
-│   └── pokemon/[id]/           # Detail route
+├── app/                          # Next.js App Router
+│   ├── page.tsx                  # Home — type filter + infinite list
+│   ├── loading.tsx               # Home route loading state
+│   ├── error.tsx                 # Home route error boundary
+│   ├── not-found.tsx             # 404 page
+│   └── pokemon/[id]/             # Detail route
 │       ├── page.tsx
 │       ├── loading.tsx
 │       └── error.tsx
 │
 ├── components/
-│   ├── ui/                     # shadcn/ui primitives
-│   ├── pokemon/                # Pokemon-specific components
+│   ├── ui/                       # shadcn/ui primitives
+│   ├── pokemon/
+│   │   ├── pokemon-detail/       # Detail page feature folder
+│   │   │   ├── index.tsx         # Orchestrator (fetch + compose)
+│   │   │   ├── hero.tsx          # Artwork, name, types, stats overview
+│   │   │   ├── ability-item.tsx  # Ability card with own data fetch
+│   │   │   ├── evolution.tsx     # Evolution chain display
+│   │   │   ├── navigation.tsx    # Prev / Next buttons
+│   │   │   └── sprites.tsx       # Game sprites grid
+│   │   ├── pokemon-grid/         # Grid feature folder
+│   │   │   ├── index.tsx         # Router (infinite vs type-filtered)
+│   │   │   ├── infinite-grid.tsx # Infinite scroll list
+│   │   │   ├── type-grid.tsx     # Type-filtered paginated grid
+│   │   │   ├── grid-skeleton.tsx # Loading skeleton
+│   │   │   └── constants.ts      # Shared grid constants
 │   │   ├── pokemon-card.tsx
 │   │   ├── pokemon-card-skeleton.tsx
-│   │   ├── pokemon-detail.tsx
-│   │   ├── pokemon-grid.tsx
 │   │   ├── pokemon-list-item.tsx
 │   │   ├── pokemon-type-filter.tsx
 │   │   ├── stat-bar.tsx
 │   │   └── type-badge.tsx
-│   └── shared/                 # Layout and global components
+│   └── shared/                   # Layout and global components
 │       ├── header.tsx
 │       ├── query-provider.tsx
-│       ├── search-input.tsx
 │       ├── theme-provider.tsx
 │       └── theme-toggle.tsx
 │
-├── services/                   # API service layer (only active endpoints)
-│   ├── core/                   # Http class, ApiError, request types
-│   ├── api.ts                  # pokemonApi singleton
-│   ├── types.ts                # Shared PokeAPI types
-│   ├── pokemon/                # fetcher + hooks + types
-│   ├── pokemon-species/        # fetcher + hooks + types
-│   ├── type/                   # fetcher + hooks + types
-│   ├── ability/                # fetcher + hooks + types
-│   └── evolution-chain/        # fetcher + hooks + types
+├── services/                     # API service layer (active endpoints only)
+│   ├── core/                     # Http class, ApiError
+│   ├── api.ts                    # pokemonApi singleton
+│   ├── types.ts                  # Shared PokeAPI types
+│   ├── pokemon/                  # fetcher + hooks + types
+│   ├── pokemon-species/          # fetcher + hooks + types
+│   ├── type/                     # fetcher + hooks + types
+│   ├── ability/                  # fetcher + hooks + types
+│   └── evolution-chain/          # fetcher + hooks + types
 │
 ├── constants/
-│   ├── api.ts                  # BASE_URL, POKEMON_LIST_LIMIT
-│   └── pokemon-types.ts        # Type → hex color mapping
+│   ├── api.ts                    # BASE_URL, POKEMON_LIST_LIMIT, MAX_POKEMON_ID
+│   └── pokemon-types.ts          # Type → hex color mapping
 │
 ├── utils/
-│   └── pokemon.ts              # formatPokemonId, formatHeight, etc.
+│   └── pokemon.ts                # formatPokemonId, formatHeight, etc.
 │
 └── test/
-    ├── setup.ts                # jest-dom global matchers
-    └── render-utils.tsx        # renderWithProviders helper
+    ├── setup.ts                  # jest-dom global matchers
+    └── render-utils.tsx          # renderWithProviders helper
 ```
 
 ## Architecture
@@ -145,7 +155,7 @@ Each service folder contains:
 
 ```
 services/pokemon/
-├── fetcher.ts   # Class-based fetcher (no hooks)
+├── fetcher.ts   # Class-based fetcher (no React hooks)
 ├── hooks.ts     # TanStack Query hooks
 ├── types.ts     # TypeScript interfaces for that endpoint
 └── index.ts     # export * from each module
@@ -153,34 +163,43 @@ services/pokemon/
 
 The `Http` class in `services/core/http.ts` wraps Axios with centralized error handling. All errors are normalized to `ApiError`. There is no auth logic — PokeAPI is a public API.
 
-```ts
-import { pokemonFetcher } from '@/services/pokemon';
+### Component Architecture
 
-const list = await pokemonFetcher.getPokemons({ limit: 20, offset: 0 });
-const detail = await pokemonFetcher.getPokemonDetail({ idOrName: 'pikachu' });
+Complex feature components use a **folder structure** to keep each concern in its own file:
+
 ```
+pokemon-detail/
+├── index.tsx      ← only imports + composes sub-components
+├── hero.tsx       ← artwork and basic info
+├── ability-item.tsx ← has its own data fetch (useGetAbility)
+├── evolution.tsx  ← evolution chain logic and display
+├── navigation.tsx ← prev/next links
+└── sprites.tsx    ← game sprite grid
+```
+
+Simple components (< 50 lines, single concern) remain as single files.
 
 ### State Management
 
-| State                        | Tool           | Example                  |
-| ---------------------------- | -------------- | ------------------------ |
-| Server data (Pokémon, types) | TanStack Query | `useGetPokemonDetail`    |
-| URL state (search, filter)   | nuqs           | `?type=fire&search=char` |
+| State                        | Tool           | Example               |
+| ---------------------------- | -------------- | --------------------- |
+| Server data (Pokémon, types) | TanStack Query | `useGetPokemonDetail` |
+| URL state (type filter)      | nuqs           | `?type=fire`          |
 
-URL state is used for all shareable filter/search values so users can bookmark or share filtered views. There is no global client-side state store — all server state lives in TanStack Query's cache.
+URL state is used for filter values so users can bookmark or share filtered views. There is no global client-side state store — all server state lives in TanStack Query's cache.
 
 ### Data Flow — Home Page
 
 ```
-URL (?type=fire&search=char)
+URL (?type=fire)
   ↓ nuqs
 PokemonGrid
-  ├── [no type] → useGetInfinitePokemons → InfiniteScroll → PokemonListItem[]
-  └── [type set] → useGetTypeDetail      → Grid          → PokemonListItem[]
-                                                              ↓
-                                                         useGetPokemonDetail
-                                                              ↓
-                                                         PokemonCard
+  ├── [no type] → useGetInfinitePokemons → InfiniteGrid → PokemonListItem[]
+  └── [type set] → useGetTypeDetail → TypeGrid (client-side paginated)
+                                          ↓
+                                     PokemonListItem
+                                          ↓
+                                     useGetPokemonDetail → PokemonCard
 ```
 
 ### Data Flow — Detail Page
@@ -188,13 +207,17 @@ PokemonGrid
 ```
 /pokemon/[id]
   ↓
-PokemonDetail
-  ├── useGetPokemonDetail(id)
-  ├── useGetPokemonSpecies(species.name)   ← depends on detail
-  ├── useGetEvolutionChain(chain.id)       ← depends on species
+PokemonDetail (index.tsx)
+  ├── useGetPokemonDetail(id)          → PokemonHero
+  ├── useGetPokemonSpecies(name)       ← depends on detail
+  ├── useGetEvolutionChain(chain.id)   ← depends on species → EvolutionDisplay
   └── AbilityItem × N
-        └── useGetAbility(ability.name)
+        └── useGetAbility(name)
 ```
+
+### Type Filter Approach
+
+Type filtering uses `GET /type/:name` which returns all Pokémon of that type in a single response. Since PokeAPI does not support server-side pagination by type, results are paginated client-side (20 per page) inside `TypeGrid`.
 
 ## Testing
 
@@ -203,7 +226,7 @@ bun test            # run all tests
 bun test:coverage   # with coverage report
 ```
 
-Tests live in `__tests__/` folders colocated with the source they cover.
+Tests live in `__tests__/` folders colocated with the source they cover. **97 tests across 18 test files.**
 
 | Layer      | Strategy                                                             |
 | ---------- | -------------------------------------------------------------------- |
