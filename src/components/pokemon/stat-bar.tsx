@@ -14,7 +14,9 @@ interface StatBarProps {
   value: number;
 }
 
-export function StatBar({ name, value }: StatBarProps) {
+import { memo } from 'react';
+
+export const StatBar = memo(function StatBar({ name, value }: StatBarProps) {
   const meta = STAT_META[name] ?? { label: name, color: '#A8A8A8' };
   const pct = Math.min((value / MAX_STAT) * 100, 100);
 
@@ -32,4 +34,4 @@ export function StatBar({ name, value }: StatBarProps) {
       </div>
     </div>
   );
-}
+});

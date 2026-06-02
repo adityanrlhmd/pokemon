@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { POKEMON_TYPE_COLORS } from '@/constants/pokemon-types';
 
 interface TypeBadgeProps {
@@ -5,7 +6,7 @@ interface TypeBadgeProps {
   size?: 'sm' | 'md';
 }
 
-export function TypeBadge({ type, size = 'md' }: TypeBadgeProps) {
+export const TypeBadge = memo(function TypeBadge({ type, size = 'md' }: TypeBadgeProps) {
   const color = POKEMON_TYPE_COLORS[type] ?? '#68A090';
 
   return (
@@ -18,4 +19,4 @@ export function TypeBadge({ type, size = 'md' }: TypeBadgeProps) {
       {type}
     </span>
   );
-}
+});

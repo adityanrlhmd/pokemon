@@ -1,11 +1,12 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useGetInfinitePokemons } from '@/services/pokemon';
 import { useGetTypeDetail } from '@/services/type';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useDebounceValue } from 'usehooks-ts';
 import { PokemonCardSkeleton } from './pokemon-card-skeleton';
 import { PokemonListItem } from './pokemon-list-item';
-import { useDebounceValue } from 'usehooks-ts';
 
 const GRID_CLASSES =
   'grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
@@ -26,10 +27,15 @@ function InfiniteGrid({ search }: { search: string }) {
 
   const [debouncedSearch] = useDebounceValue(search, 500);
 
-  const allItems = data?.pages.flatMap((p) => p.results) ?? [];
-  const items = debouncedSearch
-    ? allItems.filter((p) => p.name.includes(debouncedSearch.toLowerCase()))
-    : allItems;
+  const allItems = useMemo(() => data?.pages.flatMap((p) => p.results) ?? [], [data?.pages]);
+
+  const items = useMemo(
+    () =>
+      debouncedSearch
+        ? allItems.filter((p) => p.name.includes(debouncedSearch.toLowerCase()))
+        : allItems,
+    [allItems, debouncedSearch]
+  );
 
   if (isLoading) return <GridSkeleton />;
 
@@ -69,10 +75,13 @@ function InfiniteGrid({ search }: { search: string }) {
 function TypeFilteredGrid({ type, search }: { type: string; search: string }) {
   const { data, isLoading } = useGetTypeDetail({ idOrName: type });
 
-  const allItems = data?.pokemon ?? [];
-  const items = search
-    ? allItems.filter((p) => p.pokemon.name.includes(search.toLowerCase()))
-    : allItems;
+  const allItems = useMemo(() => data?.pokemon ?? [], [data?.pokemon]);
+
+  const items = useMemo(
+    () =>
+      search ? allItems.filter((p) => p.pokemon.name.includes(search.toLowerCase())) : allItems,
+    [allItems, search]
+  );
 
   if (isLoading) return <GridSkeleton />;
 
