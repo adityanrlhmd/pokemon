@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUlocationParams, Ulocation } from './types';
+import type { GetLocationParams, Location } from './types';
 
-class UlocationFetcher {
-  getUlocation({ idOrName }: GetUlocationParams): Promise<Ulocation> {
+class LocationFetcher {
+  getLocation({ idOrName }: GetLocationParams): Promise<Location> {
     return pokemonApi.get(`/location/${idOrName}`);
   }
 }
-export const locationFetcher = new UlocationFetcher();
+export const locationFetcher = new LocationFetcher();

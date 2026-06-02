@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUevolutionUtriggerParams, UevolutionUtrigger } from './types';
+import type { GetEvolutionTriggerParams, EvolutionTrigger } from './types';
 
-class UevolutionUtriggerFetcher {
-  getUevolutionUtrigger({ idOrName }: GetUevolutionUtriggerParams): Promise<UevolutionUtrigger> {
+class EvolutionTriggerFetcher {
+  getEvolutionTrigger({ idOrName }: GetEvolutionTriggerParams): Promise<EvolutionTrigger> {
     return pokemonApi.get(`/evolution-trigger/${idOrName}`);
   }
 }
-export const evolutiontriggerFetcher = new UevolutionUtriggerFetcher();
+export const evolutionTriggerFetcher = new EvolutionTriggerFetcher();

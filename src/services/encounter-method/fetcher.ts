@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUencounterUmethodParams, UencounterUmethod } from './types';
+import type { GetEncounterMethodParams, EncounterMethod } from './types';
 
-class UencounterUmethodFetcher {
-  getUencounterUmethod({ idOrName }: GetUencounterUmethodParams): Promise<UencounterUmethod> {
+class EncounterMethodFetcher {
+  getEncounterMethod({ idOrName }: GetEncounterMethodParams): Promise<EncounterMethod> {
     return pokemonApi.get(`/encounter-method/${idOrName}`);
   }
 }
-export const encountermethodFetcher = new UencounterUmethodFetcher();
+export const encounterMethodFetcher = new EncounterMethodFetcher();

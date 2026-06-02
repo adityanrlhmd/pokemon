@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUlanguageParams, Ulanguage } from './types';
+import type { GetLanguageParams, Language } from './types';
 
-class UlanguageFetcher {
-  getUlanguage({ idOrName }: GetUlanguageParams): Promise<Ulanguage> {
+class LanguageFetcher {
+  getLanguage({ idOrName }: GetLanguageParams): Promise<Language> {
     return pokemonApi.get(`/language/${idOrName}`);
   }
 }
-export const languageFetcher = new UlanguageFetcher();
+export const languageFetcher = new LanguageFetcher();

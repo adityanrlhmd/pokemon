@@ -1,2 +1,2 @@
-export { contesttypeFetcher } from './fetcher';
-export type { GetUcontestUtypeParams, UcontestUtype } from './types';
+export * from './fetcher';
+export * from './types';

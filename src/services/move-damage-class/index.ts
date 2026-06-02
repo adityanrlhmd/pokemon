@@ -1,2 +1,2 @@
-export { moveDamageClassFetcher } from './fetcher';
-export type { GetMoveDamageClassParams, MoveDamageClass } from './types';
+export * from './fetcher';
+export * from './types';

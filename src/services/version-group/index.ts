@@ -1,2 +1,2 @@
-export { versiongroupFetcher } from './fetcher';
-export type { GetUversionUgroupParams, UversionUgroup } from './types';
+export * from './fetcher';
+export * from './types';

@@ -1,2 +1,2 @@
-export { moveLearnMethodFetcher } from './fetcher';
-export type { GetMoveLearnMethodParams, MoveLearnMethod } from './types';
+export * from './fetcher';
+export * from './types';

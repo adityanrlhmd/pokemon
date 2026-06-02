@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUversionUgroupParams, UversionUgroup } from './types';
+import type { GetVersionGroupParams, VersionGroup } from './types';
 
-class UversionUgroupFetcher {
-  getUversionUgroup({ idOrName }: GetUversionUgroupParams): Promise<UversionUgroup> {
+class VersionGroupFetcher {
+  getVersionGroup({ idOrName }: GetVersionGroupParams): Promise<VersionGroup> {
     return pokemonApi.get(`/version-group/${idOrName}`);
   }
 }
-export const versiongroupFetcher = new UversionUgroupFetcher();
+export const versionGroupFetcher = new VersionGroupFetcher();

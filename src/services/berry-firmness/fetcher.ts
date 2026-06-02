@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUberryUfirmnessParams, UberryUfirmness } from './types';
+import type { GetBerryFirmnessParams, BerryFirmness } from './types';
 
-class UberryUfirmnessFetcher {
-  getUberryUfirmness({ idOrName }: GetUberryUfirmnessParams): Promise<UberryUfirmness> {
+class BerryFirmnessFetcher {
+  getBerryFirmness({ idOrName }: GetBerryFirmnessParams): Promise<BerryFirmness> {
     return pokemonApi.get(`/berry-firmness/${idOrName}`);
   }
 }
-export const berryfirmnessFetcher = new UberryUfirmnessFetcher();
+export const berryFirmnessFetcher = new BerryFirmnessFetcher();

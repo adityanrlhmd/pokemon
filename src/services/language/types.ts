@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface Ulanguage {
+export interface Language {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface Ulanguage {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUlanguageParams {
+export interface GetLanguageParams {
   idOrName: string | number;
 }

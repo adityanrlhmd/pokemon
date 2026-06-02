@@ -1,6 +1,6 @@
 import type { Description, Name, NamedAPIResource } from '../types';
 
-export interface UitemUflingUeffect {
+export interface ItemFlingEffect {
   id: number;
   name: string;
   items?: NamedAPIResource[];
@@ -8,6 +8,6 @@ export interface UitemUflingUeffect {
   descriptions?: Description[];
 }
 
-export interface GetUitemUflingUeffectParams {
+export interface GetItemFlingEffectParams {
   idOrName: string | number;
 }

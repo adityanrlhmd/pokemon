@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UencounterUmethod {
+export interface EncounterMethod {
   id: number;
   name: string;
   names: Name[];
@@ -9,6 +9,6 @@ export interface UencounterUmethod {
   locations?: NamedAPIResource[];
 }
 
-export interface GetUencounterUmethodParams {
+export interface GetEncounterMethodParams {
   idOrName: string | number;
 }

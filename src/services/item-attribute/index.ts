@@ -1,2 +1,2 @@
-export { itemattributeFetcher } from './fetcher';
-export type { GetUitemUattributeParams, UitemUattribute } from './types';
+export * from './fetcher';
+export * from './types';

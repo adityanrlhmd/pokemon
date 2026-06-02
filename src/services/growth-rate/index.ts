@@ -1,2 +1,2 @@
-export { growthrateFetcher } from './fetcher';
-export type { GetUgrowthUrateParams, UgrowthUrate } from './types';
+export * from './fetcher';
+export * from './types';

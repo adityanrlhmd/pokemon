@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface Uregion {
+export interface Region {
   id: number;
   name: string;
   names: Name[];
@@ -9,6 +9,6 @@ export interface Uregion {
   locations?: NamedAPIResource[];
 }
 
-export interface GetUregionParams {
+export interface GetRegionParams {
   idOrName: string | number;
 }

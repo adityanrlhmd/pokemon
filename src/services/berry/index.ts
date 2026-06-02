@@ -1,2 +1,2 @@
-export { berryFetcher } from './fetcher';
-export type { Berry, BerryFlavorMap, GetBerryParams } from './types';
+export * from './fetcher';
+export * from './types';

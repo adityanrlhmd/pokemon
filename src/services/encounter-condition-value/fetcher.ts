@@ -1,11 +1,11 @@
 import { pokemonApi } from '../api';
-import type { GetUencounterUconditionUvalueParams, UencounterUconditionUvalue } from './types';
+import type { GetEncounterConditionValueParams, EncounterConditionValue } from './types';
 
-class UencounterUconditionUvalueFetcher {
-  getUencounterUconditionUvalue({
+class EncounterConditionValueFetcher {
+  getEncounterConditionValue({
     idOrName,
-  }: GetUencounterUconditionUvalueParams): Promise<UencounterUconditionUvalue> {
+  }: GetEncounterConditionValueParams): Promise<EncounterConditionValue> {
     return pokemonApi.get(`/encounter-condition-value/${idOrName}`);
   }
 }
-export const encounterconditionvalueFetcher = new UencounterUconditionUvalueFetcher();
+export const encounterConditionValueFetcher = new EncounterConditionValueFetcher();

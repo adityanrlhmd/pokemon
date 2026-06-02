@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface Upokedex {
+export interface Pokedex {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface Upokedex {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUpokedexParams {
+export interface GetPokedexParams {
   idOrName: string | number;
 }

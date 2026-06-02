@@ -1,2 +1,2 @@
-export { natureFetcher } from './fetcher';
-export type { GetNatureParams, Nature } from './types';
+export * from './fetcher';
+export * from './types';

@@ -1,2 +1,2 @@
-export { pokemonFormFetcher } from './fetcher';
-export type { GetPokemonFormParams, PokemonForm } from './types';
+export * from './fetcher';
+export * from './types';

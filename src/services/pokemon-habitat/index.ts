@@ -1,2 +1,2 @@
-export { pokemonHabitatFetcher } from './fetcher';
-export type { GetPokemonHabitatParams, PokemonHabitat } from './types';
+export * from './fetcher';
+export * from './types';

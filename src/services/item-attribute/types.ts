@@ -1,6 +1,6 @@
 import type { Description, Name, NamedAPIResource } from '../types';
 
-export interface UitemUattribute {
+export interface ItemAttribute {
   id: number;
   name: string;
   items?: NamedAPIResource[];
@@ -8,6 +8,6 @@ export interface UitemUattribute {
   descriptions?: Description[];
 }
 
-export interface GetUitemUattributeParams {
+export interface GetItemAttributeParams {
   idOrName: string | number;
 }

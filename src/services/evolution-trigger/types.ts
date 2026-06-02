@@ -1,12 +1,12 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UevolutionUtrigger {
+export interface EvolutionTrigger {
   id: number;
   name: string;
   names: Name[];
   pokemon_species?: NamedAPIResource[];
 }
 
-export interface GetUevolutionUtriggerParams {
+export interface GetEvolutionTriggerParams {
   idOrName: string | number;
 }

@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUversionParams, Uversion } from './types';
+import type { GetVersionParams, Version } from './types';
 
-class UversionFetcher {
-  getUversion({ idOrName }: GetUversionParams): Promise<Uversion> {
+class VersionFetcher {
+  getVersion({ idOrName }: GetVersionParams): Promise<Version> {
     return pokemonApi.get(`/version/${idOrName}`);
   }
 }
-export const versionFetcher = new UversionFetcher();
+export const versionFetcher = new VersionFetcher();

@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUberryUflavorParams, UberryUflavor } from './types';
+import type { GetBerryFlavorParams, BerryFlavor } from './types';
 
-class UberryUflavorFetcher {
-  getUberryUflavor({ idOrName }: GetUberryUflavorParams): Promise<UberryUflavor> {
+class BerryFlavorFetcher {
+  getBerryFlavor({ idOrName }: GetBerryFlavorParams): Promise<BerryFlavor> {
     return pokemonApi.get(`/berry-flavor/${idOrName}`);
   }
 }
-export const berryflavorFetcher = new UberryUflavorFetcher();
+export const berryFlavorFetcher = new BerryFlavorFetcher();

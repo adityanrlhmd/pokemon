@@ -1,6 +1,6 @@
 import type { Description, Name, NamedAPIResource } from '../types';
 
-export interface UitemUcategory {
+export interface ItemCategory {
   id: number;
   name: string;
   items?: NamedAPIResource[];
@@ -8,6 +8,6 @@ export interface UitemUcategory {
   descriptions?: Description[];
 }
 
-export interface GetUitemUcategoryParams {
+export interface GetItemCategoryParams {
   idOrName: string | number;
 }

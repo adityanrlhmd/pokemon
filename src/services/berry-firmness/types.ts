@@ -1,11 +1,11 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UberryUfirmness {
+export interface BerryFirmness {
   id: number;
   name: string;
   names: Name[];
   berries: NamedAPIResource[];
 }
-export interface GetUberryUfirmnessParams {
+export interface GetBerryFirmnessParams {
   idOrName: string | number;
 }

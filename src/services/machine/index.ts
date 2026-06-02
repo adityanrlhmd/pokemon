@@ -1,2 +1,2 @@
-export { machineFetcher } from './fetcher';
-export type { GetMachineParams, Machine } from './types';
+export * from './fetcher';
+export * from './types';

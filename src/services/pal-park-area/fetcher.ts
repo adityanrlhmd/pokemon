@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUpalUparkUareaParams, UpalUparkUarea } from './types';
+import type { GetPalParkAreaParams, PalParkArea } from './types';
 
-class UpalUparkUareaFetcher {
-  getUpalUparkUarea({ idOrName }: GetUpalUparkUareaParams): Promise<UpalUparkUarea> {
+class PalParkAreaFetcher {
+  getPalParkArea({ idOrName }: GetPalParkAreaParams): Promise<PalParkArea> {
     return pokemonApi.get(`/pal-park-area/${idOrName}`);
   }
 }
-export const palparkareaFetcher = new UpalUparkUareaFetcher();
+export const palParkAreaFetcher = new PalParkAreaFetcher();

@@ -1,2 +1,2 @@
-export { pokemonColorFetcher } from './fetcher';
-export type { GetPokemonColorParams, PokemonColor } from './types';
+export * from './fetcher';
+export * from './types';

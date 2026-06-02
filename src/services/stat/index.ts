@@ -1,2 +1,2 @@
-export { statFetcher } from './fetcher';
-export type { GetStatParams, Stat } from './types';
+export * from './fetcher';
+export * from './types';

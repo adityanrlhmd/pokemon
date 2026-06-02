@@ -1,2 +1,2 @@
-export { languageFetcher } from './fetcher';
-export type { GetUlanguageParams, Ulanguage } from './types';
+export * from './fetcher';
+export * from './types';

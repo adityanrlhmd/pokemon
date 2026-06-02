@@ -1,2 +1,2 @@
-export { regionFetcher } from './fetcher';
-export type { GetUregionParams, Uregion } from './types';
+export * from './fetcher';
+export * from './types';

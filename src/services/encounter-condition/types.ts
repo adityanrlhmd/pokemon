@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UencounterUcondition {
+export interface EncounterCondition {
   id: number;
   name: string;
   names: Name[];
@@ -9,6 +9,6 @@ export interface UencounterUcondition {
   locations?: NamedAPIResource[];
 }
 
-export interface GetUencounterUconditionParams {
+export interface GetEncounterConditionParams {
   idOrName: string | number;
 }

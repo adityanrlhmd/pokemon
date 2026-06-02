@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UpokeathlonUstat {
+export interface PokeathlonStat {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface UpokeathlonUstat {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUpokeathlonUstatParams {
+export interface GetPokeathlonStatParams {
   idOrName: string | number;
 }

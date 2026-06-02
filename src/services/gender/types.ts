@@ -1,12 +1,12 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface Ugender {
+export interface Gender {
   id: number;
   name: string;
   names: Name[];
   pokemon_species?: NamedAPIResource[];
 }
 
-export interface GetUgenderParams {
+export interface GetGenderParams {
   idOrName: string | number;
 }

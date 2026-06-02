@@ -1,11 +1,11 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UberryUflavor {
+export interface BerryFlavor {
   id: number;
   name: string;
   names: Name[];
   berries: NamedAPIResource[];
 }
-export interface GetUberryUflavorParams {
+export interface GetBerryFlavorParams {
   idOrName: string | number;
 }

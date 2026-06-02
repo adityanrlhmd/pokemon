@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UsuperUcontestUeffect {
+export interface SuperContestEffect {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface UsuperUcontestUeffect {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUsuperUcontestUeffectParams {
+export interface GetSuperContestEffectParams {
   idOrName: string | number;
 }

@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUitemUattributeParams, UitemUattribute } from './types';
+import type { GetItemAttributeParams, ItemAttribute } from './types';
 
-class UitemUattributeFetcher {
-  getUitemUattribute({ idOrName }: GetUitemUattributeParams): Promise<UitemUattribute> {
+class ItemAttributeFetcher {
+  getItemAttribute({ idOrName }: GetItemAttributeParams): Promise<ItemAttribute> {
     return pokemonApi.get(`/item-attribute/${idOrName}`);
   }
 }
-export const itemattributeFetcher = new UitemUattributeFetcher();
+export const itemAttributeFetcher = new ItemAttributeFetcher();

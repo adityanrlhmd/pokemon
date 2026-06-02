@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UcontestUtype {
+export interface ContestType {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface UcontestUtype {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUcontestUtypeParams {
+export interface GetContestTypeParams {
   idOrName: string | number;
 }

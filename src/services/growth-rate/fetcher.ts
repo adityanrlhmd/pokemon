@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUgrowthUrateParams, UgrowthUrate } from './types';
+import type { GetGrowthRateParams, GrowthRate } from './types';
 
-class UgrowthUrateFetcher {
-  getUgrowthUrate({ idOrName }: GetUgrowthUrateParams): Promise<UgrowthUrate> {
+class GrowthRateFetcher {
+  getGrowthRate({ idOrName }: GetGrowthRateParams): Promise<GrowthRate> {
     return pokemonApi.get(`/growth-rate/${idOrName}`);
   }
 }
-export const growthrateFetcher = new UgrowthUrateFetcher();
+export const growthRateFetcher = new GrowthRateFetcher();

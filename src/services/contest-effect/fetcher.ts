@@ -6,4 +6,4 @@ class ContestEffectFetcher {
     return pokemonApi.get(`/contest-effect/${id}`);
   }
 }
-export const contesteffectFetcher = new ContestEffectFetcher();
+export const contestEffectFetcher = new ContestEffectFetcher();

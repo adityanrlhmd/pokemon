@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UpalUparkUarea {
+export interface PalParkArea {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface UpalUparkUarea {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUpalUparkUareaParams {
+export interface GetPalParkAreaParams {
   idOrName: string | number;
 }

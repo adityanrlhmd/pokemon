@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUgenderParams, Ugender } from './types';
+import type { GetGenderParams, Gender } from './types';
 
-class UgenderFetcher {
-  getUgender({ idOrName }: GetUgenderParams): Promise<Ugender> {
+class GenderFetcher {
+  getGender({ idOrName }: GetGenderParams): Promise<Gender> {
     return pokemonApi.get(`/gender/${idOrName}`);
   }
 }
-export const genderFetcher = new UgenderFetcher();
+export const genderFetcher = new GenderFetcher();

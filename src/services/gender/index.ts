@@ -1,2 +1,2 @@
-export { genderFetcher } from './fetcher';
-export type { GetUgenderParams, Ugender } from './types';
+export * from './fetcher';
+export * from './types';

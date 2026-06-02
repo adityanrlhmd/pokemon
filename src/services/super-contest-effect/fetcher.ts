@@ -1,11 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUsuperUcontestUeffectParams, UsuperUcontestUeffect } from './types';
+import type { GetSuperContestEffectParams, SuperContestEffect } from './types';
 
-class UsuperUcontestUeffectFetcher {
-  getUsuperUcontestUeffect({
-    idOrName,
-  }: GetUsuperUcontestUeffectParams): Promise<UsuperUcontestUeffect> {
+class SuperContestEffectFetcher {
+  getSuperContestEffect({ idOrName }: GetSuperContestEffectParams): Promise<SuperContestEffect> {
     return pokemonApi.get(`/super-contest-effect/${idOrName}`);
   }
 }
-export const supercontesteffectFetcher = new UsuperUcontestUeffectFetcher();
+export const supercontesteffectFetcher = new SuperContestEffectFetcher();

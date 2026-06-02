@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUitemUpocketParams, UitemUpocket } from './types';
+import type { GetItemPocketParams, ItemPocket } from './types';
 
-class UitemUpocketFetcher {
-  getUitemUpocket({ idOrName }: GetUitemUpocketParams): Promise<UitemUpocket> {
+class ItemPocketFetcher {
+  getItemPocket({ idOrName }: GetItemPocketParams): Promise<ItemPocket> {
     return pokemonApi.get(`/item-pocket/${idOrName}`);
   }
 }
-export const itempocketFetcher = new UitemUpocketFetcher();
+export const itemPocketFetcher = new ItemPocketFetcher();

@@ -1,6 +1,6 @@
 import type { Description, Name, NamedAPIResource } from '../types';
 
-export interface UitemUpocket {
+export interface ItemPocket {
   id: number;
   name: string;
   items?: NamedAPIResource[];
@@ -8,6 +8,6 @@ export interface UitemUpocket {
   descriptions?: Description[];
 }
 
-export interface GetUitemUpocketParams {
+export interface GetItemPocketParams {
   idOrName: string | number;
 }

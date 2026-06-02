@@ -1,2 +1,2 @@
-export { pokedexFetcher } from './fetcher';
-export type { GetUpokedexParams, Upokedex } from './types';
+export * from './fetcher';
+export * from './types';

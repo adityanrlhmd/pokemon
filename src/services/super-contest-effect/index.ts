@@ -1,2 +1,2 @@
-export { supercontesteffectFetcher } from './fetcher';
-export type { GetUsuperUcontestUeffectParams, UsuperUcontestUeffect } from './types';
+export * from './fetcher';
+export * from './types';

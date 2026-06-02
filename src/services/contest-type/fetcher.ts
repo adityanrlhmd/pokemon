@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUcontestUtypeParams, UcontestUtype } from './types';
+import type { GetContestTypeParams, ContestType } from './types';
 
-class UcontestUtypeFetcher {
-  getUcontestUtype({ idOrName }: GetUcontestUtypeParams): Promise<UcontestUtype> {
+class ContestTypeFetcher {
+  getContestType({ idOrName }: GetContestTypeParams): Promise<ContestType> {
     return pokemonApi.get(`/contest-type/${idOrName}`);
   }
 }
-export const contesttypeFetcher = new UcontestUtypeFetcher();
+export const contestTypeFetcher = new ContestTypeFetcher();

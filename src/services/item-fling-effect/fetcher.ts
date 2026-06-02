@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUitemUflingUeffectParams, UitemUflingUeffect } from './types';
+import type { GetItemFlingEffectParams, ItemFlingEffect } from './types';
 
-class UitemUflingUeffectFetcher {
-  getUitemUflingUeffect({ idOrName }: GetUitemUflingUeffectParams): Promise<UitemUflingUeffect> {
+class ItemFlingEffectFetcher {
+  getItemFlingEffect({ idOrName }: GetItemFlingEffectParams): Promise<ItemFlingEffect> {
     return pokemonApi.get(`/item-fling-effect/${idOrName}`);
   }
 }
-export const itemflingeffectFetcher = new UitemUflingUeffectFetcher();
+export const itemFlingEffectFetcher = new ItemFlingEffectFetcher();

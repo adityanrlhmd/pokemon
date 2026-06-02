@@ -1,2 +1,2 @@
-export { evolutiontriggerFetcher } from './fetcher';
-export type { GetUevolutionUtriggerParams, UevolutionUtrigger } from './types';
+export * from './fetcher';
+export * from './types';

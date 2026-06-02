@@ -1,2 +1,2 @@
-export { itemFetcher } from './fetcher';
-export type { GetItemParams, GetItemsParams, Item, ItemFlavorText } from './types';
+export * from './fetcher';
+export * from './types';

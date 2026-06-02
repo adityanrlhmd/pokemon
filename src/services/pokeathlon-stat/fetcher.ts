@@ -1,9 +1,9 @@
 import { pokemonApi } from '../api';
-import type { GetUpokeathlonUstatParams, UpokeathlonUstat } from './types';
+import type { GetPokeathlonStatParams, PokeathlonStat } from './types';
 
-class UpokeathlonUstatFetcher {
-  getUpokeathlonUstat({ idOrName }: GetUpokeathlonUstatParams): Promise<UpokeathlonUstat> {
+class PokeathlonStatFetcher {
+  getPokeathlonStat({ idOrName }: GetPokeathlonStatParams): Promise<PokeathlonStat> {
     return pokemonApi.get(`/pokeathlon-stat/${idOrName}`);
   }
 }
-export const pokeathlonstatFetcher = new UpokeathlonUstatFetcher();
+export const pokeathlonstatFetcher = new PokeathlonStatFetcher();

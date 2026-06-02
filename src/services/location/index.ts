@@ -1,2 +1,2 @@
-export { locationFetcher } from './fetcher';
-export type { GetUlocationParams, Ulocation } from './types';
+export * from './fetcher';
+export * from './types';

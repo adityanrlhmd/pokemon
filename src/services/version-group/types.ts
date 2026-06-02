@@ -1,6 +1,6 @@
 import type { Name, NamedAPIResource } from '../types';
 
-export interface UversionUgroup {
+export interface VersionGroup {
   id: number;
   name: string;
   names: Name[];
@@ -8,6 +8,6 @@ export interface UversionUgroup {
   version_groups?: NamedAPIResource[];
 }
 
-export interface GetUversionUgroupParams {
+export interface GetVersionGroupParams {
   idOrName: string | number;
 }

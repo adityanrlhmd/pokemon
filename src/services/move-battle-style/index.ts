@@ -1,2 +1,2 @@
-export { moveBattleStyleFetcher } from './fetcher';
-export type { GetMoveBattleStyleParams, MoveBattleStyle } from './types';
+export * from './fetcher';
+export * from './types';

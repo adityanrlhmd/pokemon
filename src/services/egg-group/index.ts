@@ -1,2 +1,2 @@
-export { eggGroupFetcher } from './fetcher';
-export type { GetEggGroupParams, EggGroup } from './types';
+export * from './fetcher';
+export * from './types';

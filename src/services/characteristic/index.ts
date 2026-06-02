@@ -1,2 +1,2 @@
-export { characteristicFetcher } from './fetcher';
-export type { Characteristic, GetCharacteristicParams } from './types';
+export * from './fetcher';
+export * from './types';
