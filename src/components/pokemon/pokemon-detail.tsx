@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useGetAbility } from '@/services/ability';
 import { useGetEvolutionChain } from '@/services/evolution-chain';
@@ -10,6 +10,7 @@ import { useGetPokemonDetail } from '@/services/pokemon';
 import { useGetPokemonSpecies } from '@/services/pokemon-species';
 import type { ChainLink, EvolutionDetail } from '@/services/evolution-chain';
 import type { NamedAPIResource } from '@/services/types';
+import { MAX_POKEMON_ID } from '@/constants/api';
 import { POKEMON_TYPE_COLORS } from '@/constants/pokemon-types';
 import {
   extractIdFromUrl,
@@ -52,13 +53,16 @@ export function PokemonDetail({ idOrName }: PokemonDetailProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <Link
-        href="/"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </Link>
+      <div className="mb-6 flex items-center justify-between">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </Link>
+        <PokemonNavigation id={pokemon.id} />
+      </div>
 
       {/* Hero */}
       <div
@@ -145,6 +149,30 @@ export function PokemonDetail({ idOrName }: PokemonDetailProps) {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+function PokemonNavigation({ id }: { id: number }) {
+  const prevId = id === 1 ? MAX_POKEMON_ID : id - 1;
+  const nextId = id === MAX_POKEMON_ID ? 1 : id + 1;
+
+  return (
+    <div className="flex items-center gap-2">
+      <Link
+        href={`/pokemon/${prevId}`}
+        className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+      >
+        <ChevronLeft className="h-3.5 w-3.5" />
+        {formatPokemonId(prevId)}
+      </Link>
+      <Link
+        href={`/pokemon/${nextId}`}
+        className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+      >
+        {formatPokemonId(nextId)}
+        <ChevronRight className="h-3.5 w-3.5" />
+      </Link>
+    </div>
+  );
+}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

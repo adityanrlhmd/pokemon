@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { MAX_POKEMON_ID } from '@/constants/api';
 import { useGetInfinitePokemons } from '@/services/pokemon';
 import { useGetTypeDetail } from '@/services/type';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -25,7 +26,10 @@ function InfiniteGrid() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useGetInfinitePokemons();
 
-  const items = useMemo(() => data?.pages.flatMap((p) => p.results) ?? [], [data?.pages]);
+  const items = useMemo(
+    () => (data?.pages.flatMap((p) => p.results) ?? []).slice(0, MAX_POKEMON_ID),
+    [data?.pages]
+  );
 
   if (isLoading) return <GridSkeleton />;
 
@@ -33,7 +37,7 @@ function InfiniteGrid() {
     <InfiniteScroll
       dataLength={items.length}
       next={fetchNextPage}
-      hasMore={!!hasNextPage}
+      hasMore={items.length < MAX_POKEMON_ID && !!hasNextPage}
       loader={
         isFetchingNextPage && (
           <div className={`mt-3 ${GRID_CLASSES}`}>
