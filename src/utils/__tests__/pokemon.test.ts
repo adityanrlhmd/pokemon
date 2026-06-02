@@ -7,7 +7,7 @@ import {
   getEnglishFlavorText,
   getEnglishGenus,
   getPokemonArtwork,
-} from './pokemon';
+} from '../pokemon';
 
 describe('formatPokemonId', () => {
   it('pads single digit with zeros', () => {

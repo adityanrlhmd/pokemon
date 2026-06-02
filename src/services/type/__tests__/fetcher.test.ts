@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../core/error';
-import { typeFetcher } from './fetcher';
+import { ApiError } from '../../core/error';
+import { typeFetcher } from '../fetcher';
 
-vi.mock('../api', () => ({
+vi.mock('../../api', () => ({
   pokemonApi: { get: vi.fn() },
 }));
 
-const { pokemonApi } = await import('../api');
+const { pokemonApi } = await import('../../api');
 const mockGet = vi.mocked(pokemonApi.get);
 
 const mockTypeList = {

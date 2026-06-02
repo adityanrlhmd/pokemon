@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { POKEMON_TYPE_COLORS } from '@/constants/pokemon-types';
-import { TypeBadge } from './type-badge';
+import { TypeBadge } from '../type-badge';
 
 describe('TypeBadge', () => {
   it('renders the type name', () => {
