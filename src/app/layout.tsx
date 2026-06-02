@@ -4,6 +4,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { QueryProvider } from '@/components/shared/query-provider';
+import { Header } from '@/components/shared/header';
 
 const nunitoSans = Nunito_Sans({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -41,7 +42,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NuqsAdapter>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+          </QueryProvider>
         </NuqsAdapter>
       </body>
     </html>
