@@ -5,6 +5,7 @@ import { useGetTypeDetail } from '@/services/type';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { PokemonCardSkeleton } from './pokemon-card-skeleton';
 import { PokemonListItem } from './pokemon-list-item';
+import { useDebounceValue } from 'usehooks-ts';
 
 const GRID_CLASSES =
   'grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
@@ -23,8 +24,12 @@ function InfiniteGrid({ search }: { search: string }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useGetInfinitePokemons();
 
+  const [debouncedSearch] = useDebounceValue(search, 500);
+
   const allItems = data?.pages.flatMap((p) => p.results) ?? [];
-  const items = search ? allItems.filter((p) => p.name.includes(search.toLowerCase())) : allItems;
+  const items = debouncedSearch
+    ? allItems.filter((p) => p.name.includes(debouncedSearch.toLowerCase()))
+    : allItems;
 
   if (isLoading) return <GridSkeleton />;
 
